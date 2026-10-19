@@ -95,7 +95,7 @@ def main():
 
     print("=" * 60)
     print("5. Pages projects and their custom domains")
-    st, d = call(f"/accounts/{ACCOUNT}/pages/projects?per_page=50")
+    st, d = call(f"/accounts/{ACCOUNT}/pages/projects")
     projs = d.get("result") or []
     print("   http:", st, "| success:", d.get("success"), "| count:", len(projs))
     for p in projs:
@@ -105,12 +105,53 @@ def main():
         print("   ERR", c, m)
 
     print("=" * 60)
+    print("5b. direct probe: pages project named 'tv' or matching host")
+    for cand in ["tv", "cuicui-tv", "libretv"]:
+        st, d = call(f"/accounts/{ACCOUNT}/pages/projects/{cand}")
+        if st == 200 and d.get("success"):
+            r = d["result"]
+            print("   FOUND pages project:", r["name"], "| domains:", r.get("domains"),
+                  "| subdomain:", r.get("subdomain"))
+        else:
+            print(f"   pages project '{cand}': http={st} errs={errs(d)}")
+
+    print("=" * 60)
     print("6. Workers scripts in account")
     st, d = call(f"/accounts/{ACCOUNT}/workers/scripts")
     scr = d.get("result") or []
     print("   http:", st, "| success:", d.get("success"), "| count:", len(scr))
     for s in scr:
         print("   worker:", s.get("id"))
+    for c, m in errs(d):
+        print("   ERR", c, m)
+
+    print("=" * 60)
+    print("7. Workers routes on the zone (route-based takeover path)")
+    if zone_id:
+        st, d = call(f"/zones/{zone_id}/workers/routes")
+        routes = d.get("result") or []
+        print("   http:", st, "| success:", d.get("success"), "| count:", len(routes))
+        for r in routes:
+            print("   ROUTE id=", r["id"], "| pattern=", r["pattern"], "| script=", r.get("script"))
+        for c, m in errs(d):
+            print("   ERR", c, m)
+    else:
+        print("   (no zone id)")
+
+    print("=" * 60)
+    print("8. Workers.dev subdomain")
+    st, d = call(f"/accounts/{ACCOUNT}/workers/subdomain")
+    print("   http:", st, "| success:", d.get("success"),
+          "| subdomain:", (d.get("result") or {}).get("subdomain"))
+    for c, m in errs(d):
+        print("   ERR", c, m)
+
+    print("=" * 60)
+    print("9. cuicui-tv worker custom domains / routes bindings")
+    st, d = call(f"/accounts/{ACCOUNT}/workers/scripts/cuicui-tv/domains")
+    print("   /domains http:", st, "| success:", d.get("success"))
+    for i in d.get("result") or []:
+        print("   domain:", i.get("hostname"), "| service:", i.get("service"), "| env:", i.get("environment"))
     for c, m in errs(d):
         print("   ERR", c, m)
 
