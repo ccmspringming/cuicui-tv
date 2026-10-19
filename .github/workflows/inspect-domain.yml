@@ -19,4 +19,13 @@ jobs:
           CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           TARGET_HOST: tv.cuicui.de
           TARGET_ZONE: cuicui.de
-        run: python3 scripts/cf-inspect.py
+        run: |
+          set -o pipefail
+          python3 scripts/cf-inspect.py 2>&1 | tee /tmp/cf-inspect.txt
+          {
+            echo '## Cloudflare inspection'
+            echo ''
+            echo '```'
+            cat /tmp/cf-inspect.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
