@@ -2,7 +2,9 @@
   "name": "cuicui-tv",
   "main": ".open-next/worker.js",
   "compatibility_date": "2024-09-23",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
@@ -14,7 +16,8 @@
     }
   ],
   "vars": {
-    "DEFAULT_SUBSCRIPTIONS": "[\"https://tv.cuicui.de/sources.json\"]",
+    "DEFAULT_SOURCES": "[{\"name\":\"非凡资源\",\"url\":\"http://cj.ffzyapi.com/api.php/provide/vod\"},{\"name\":\"69迷你\",\"url\":\"http://qp.69mini.com/api.php/provide/vod\"},{\"name\":\"360资源\",\"url\":\"https://360zy.com/api.php/provide/vod\"},{\"name\":\"光束资源\",\"url\":\"https://api.guangsuapi.com/api.php/provide/vod\"},{\"name\":\"优酷88\",\"url\":\"https://api.ukuapi88.com/api.php/provide/vod\"},{\"name\":\"新浪资源\",\"url\":\"https://api.xinlangapi.com/xinlangapi.php/provide/vod\"},{\"name\":\"最顶资源\",\"url\":\"https://api.zuidapi.com/api.php/provide/vod\"},{\"name\":\"暴风资源\",\"url\":\"https://bfzyapi.com/api.php/provide/vod\"},{\"name\":\"豪华资源\",\"url\":\"https://hhzyapi.com/api.php/provide/vod\"},{\"name\":\"极速资源\",\"url\":\"https://jszyapi.com/api.php/provide/vod\"},{\"name\":\"金鹰资源\",\"url\":\"https://jyzyapi.com/provide/vod\"},{\"name\":\"P2100\",\"url\":\"https://p2100.net/api.php/provide/vod\"},{\"name\":\"huyaapi.com\",\"url\":\"https://www.huyaapi.com/api.php/provide/vod\"}]",
+    "DEFAULT_LIVE_SOURCES": "[{\"name\":\"iptv-org 中国\",\"url\":\"https://iptv-org.github.io/iptv/countries/cn.m3u\",\"epg\":null},{\"name\":\"best-fan 央视\",\"url\":\"https://raw.githubusercontent.com/best-fan/iptv-sources/master/cn_cctv.m3u8\",\"epg\":null},{\"name\":\"best-fan 全部\",\"url\":\"https://raw.githubusercontent.com/best-fan/iptv-sources/master/cn_all.m3u8\",\"epg\":null}]",
     "DEFAULT_RECOMMEND_SOURCE": "douban"
   }
 }
