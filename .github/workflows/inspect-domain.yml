@@ -1,0 +1,22 @@
+name: Inspect cuicui.de zone
+
+# TEMPORARY diagnostic workflow -- read-only. Delete after the cutover.
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Inspect zone, DNS records, Pages projects
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TARGET_HOST: tv.cuicui.de
+          TARGET_ZONE: cuicui.de
+        run: python3 scripts/cf-inspect.py
