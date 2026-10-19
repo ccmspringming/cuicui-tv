@@ -1,0 +1,30 @@
+name: CF inventory (read-only)
+
+# TEMPORARY diagnostic -- lists Workers, Pages projects, routes and DNS so we can
+# determine how a given site was deployed. Read-only; prints no secrets.
+on:
+  workflow_dispatch:
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Inventory
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -o pipefail
+          python3 scripts/cf-inventory.py 2>&1 | tee /tmp/inv.txt
+          {
+            echo '## Cloudflare inventory'
+            echo ''
+            echo '```'
+            cat /tmp/inv.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
