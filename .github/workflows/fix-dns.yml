@@ -1,0 +1,49 @@
+name: Fix DNS for Worker custom domain
+
+# Removes the orphaned DNS record(s) left behind after detaching a hostname from
+# a Pages project, so the Worker can claim it as a custom domain (error 100117).
+# Only exact-name matches are touched. DRY_RUN defaults to 1.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (1 = report only, 0 = delete)'
+        required: true
+        default: '1'
+      host:
+        description: 'Hostname whose DNS records should be cleaned'
+        required: true
+        default: 'tv.cuicui.de'
+      zone:
+        description: 'Cloudflare zone name'
+        required: true
+        default: 'cuicui.de'
+
+jobs:
+  fix-dns:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Clean orphaned DNS records
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TARGET_HOST: ${{ inputs.host }}
+          TARGET_ZONE: ${{ inputs.zone }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -o pipefail
+          python3 scripts/cf-fix-dns.py 2>&1 | tee /tmp/dnsfix.txt
+          {
+            echo '## DNS cleanup for Worker custom domain'
+            echo ''
+            echo "dry_run=\`${{ inputs.dry_run }}\`  host=\`${{ inputs.host }}\`  zone=\`${{ inputs.zone }}\`"
+            echo ''
+            echo '```'
+            cat /tmp/dnsfix.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
