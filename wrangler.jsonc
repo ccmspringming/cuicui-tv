@@ -12,5 +12,9 @@
       "pattern": "tv.cuicui.de",
       "custom_domain": true
     }
-  ]
+  ],
+  "vars": {
+    "DEFAULT_SUBSCRIPTIONS": "[\"https://tv.cuicui.de/sources.json\"]",
+    "DEFAULT_RECOMMEND_SOURCE": "douban"
+  }
 }
