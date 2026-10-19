@@ -6,5 +6,11 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
-  }
+  },
+  "routes": [
+    {
+      "pattern": "tv.cuicui.de",
+      "custom_domain": true
+    }
+  ]
 }
